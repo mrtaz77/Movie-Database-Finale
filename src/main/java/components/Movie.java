@@ -1,10 +1,9 @@
 package components;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.io.Serializable;
-import java.util.List;
 import java.util.Set;
+import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Movie implements Serializable {
     //members
@@ -14,35 +13,35 @@ public class Movie implements Serializable {
     private long budget,revenue;
 
     //static members
-    private static final HashMap<String,List<Movie>> companyMovieList = new HashMap<>();
+    private static final ConcurrentHashMap<String,Vector<Movie>> companyMovieList = new ConcurrentHashMap<>();
 
     //methods
 
     //constructor
-    public Movie(String name,int releaseYear,String genre1,String genre2,String genre3,int runningTime, String productionCompany,long budget,long revenue){
-        this.name=name;
-        this.productionCompany=productionCompany;
-        this.genre1=genre1;
-        this.genre2=genre2;
-        this.genre3=genre3;
+    public Movie(String name,int releaseYear,String genre1,String genre2,String genre3,int runningTime,String productionCompany,long budget,long revenue){
+        this.name=StringRectifier.rectify(name);
+        this.productionCompany=StringRectifier.rectify(productionCompany);
+        this.genre1=StringRectifier.rectify(genre1);
+        this.genre2=StringRectifier.rectify(genre2);
+        this.genre3=StringRectifier.rectify(genre3);
         this.releaseYear=releaseYear;
         this.runningTime=runningTime;
         this.budget=budget;
         this.revenue=revenue;
-        if(companyMovieList.containsKey(productionCompany))companyMovieList.get(productionCompany).add(this);
+        if(companyMovieList.containsKey(this.productionCompany))companyMovieList.get(this.productionCompany).addElement(this);
         else {
-            List<Movie> movies = new ArrayList<>();
-            movies.add(this);
+            Vector<Movie> movies = new Vector<>();
+            movies.addElement(this);
             companyMovieList.put(productionCompany,movies);
         }
     }
 
     public Movie(Movie movie){
-        if(companyMovieList.containsKey(productionCompany))companyMovieList.get(productionCompany).add(this);
+        if(companyMovieList.containsKey(movie.productionCompany))companyMovieList.get(movie.productionCompany).addElement(this);
         else {
-            List<Movie> movies = new ArrayList<>();
-            movies.add(this);
-            companyMovieList.put(productionCompany,movies);
+            Vector<Movie> movies = new Vector<>();
+            movies.addElement(this);
+            companyMovieList.put(movie.productionCompany,movies);
         }
     }
 
@@ -67,7 +66,7 @@ public class Movie implements Serializable {
     public String getGenre1(){return genre1;}
     public String getGenre2(){return genre2;}
     public String getGenre3(){return genre3;}
-    public static HashMap<String,List<Movie>> getCompanyMovieList(){return companyMovieList;}
+    public static ConcurrentHashMap<String,Vector<Movie>> getCompanyMovieList(){return companyMovieList;}
 
     public void showMovieDetails(){
         System.out.println("Title : "+name);
@@ -85,6 +84,7 @@ public class Movie implements Serializable {
     public long getProfit(){return revenue-budget;}
 
     public static boolean isName(String name){
+        name = StringRectifier.rectify(name);
         for(String productionCompany : companyMovieList.keySet()){
             for(Movie movie : companyMovieList.get(productionCompany))if(movie.getName().equalsIgnoreCase(name))return true;
         }
@@ -92,6 +92,7 @@ public class Movie implements Serializable {
     }
 
     public static boolean isGenre(String genre){
+        genre = StringRectifier.rectify(genre);
         for(String productionCompany : companyMovieList.keySet()) {
             for (Movie movie : companyMovieList.get(productionCompany)) {
                 if (movie.getGenre1().equalsIgnoreCase(genre)||movie.getGenre2().equalsIgnoreCase(genre)||movie.getGenre3().equalsIgnoreCase(genre)) return true;
@@ -108,6 +109,7 @@ public class Movie implements Serializable {
     }
 
     public static boolean isProductionCompany(String productionCompany){
+        productionCompany = StringRectifier.rectify(productionCompany);
         for(String company : companyMovieList.keySet()){
             if(company.equalsIgnoreCase(productionCompany))return true;
         }
@@ -124,51 +126,54 @@ public class Movie implements Serializable {
     }
 
     public static Movie getMovieByName(String name){
+        name = StringRectifier.rectify(name);
         for(String productionCompany : companyMovieList.keySet()){
             for(Movie movie : companyMovieList.get(productionCompany))if(movie.getName().equalsIgnoreCase(name))return movie;
         }
         return null;
     }
 
-    public static List<Movie> getMovieByYear(int year){
-        List<Movie>movies = new ArrayList<>();
+    public static Vector<Movie> getMovieByYear(int year){
+        Vector<Movie>movies = new Vector<>();
         for(String productionCompany : companyMovieList.keySet()){
-            for(Movie movie : companyMovieList.get(productionCompany))if(movie.getReleaseYear()==year)movies.add(movie);
+            for(Movie movie : companyMovieList.get(productionCompany))if(movie.getReleaseYear()==year)movies.addElement(movie);
         }
         return movies;
     }
 
-    public static List<Movie> getMovieByGenre(String genre){
-        List<Movie>movies = new ArrayList<>();
+    public static Vector<Movie> getMovieByGenre(String genre){
+        genre = StringRectifier.rectify(genre);
+        Vector<Movie>movies = new Vector<>();
         for(String productionCompany : companyMovieList.keySet()) {
             for (Movie movie : companyMovieList.get(productionCompany)) {
-                if (movie.getGenre1().equalsIgnoreCase(genre)||movie.getGenre2().equalsIgnoreCase(genre)||movie.getGenre3().equalsIgnoreCase(genre)) movies.add(movie);
+                if (movie.getGenre1().equalsIgnoreCase(genre)||movie.getGenre2().equalsIgnoreCase(genre)||movie.getGenre3().equalsIgnoreCase(genre)) movies.addElement(movie);
             }
         }
         return movies;
     }
 
-    public static List<Movie> getMovieByProductionCompany(String productionCompany){
+    public static Vector<Movie> getMovieByProductionCompany(String productionCompany){
         return companyMovieList.get(StringRectifier.rectify(productionCompany));
     }
 
-    public static List<Movie> getMovieByRunningTime(int low,int high){
-        List<Movie>movies = new ArrayList<>();
+    public static Vector<Movie> getMovieByRunningTime(int low,int high){
+        Vector<Movie>movies = new Vector<>();
         for(String productionCompany : companyMovieList.keySet()) {
             for (Movie movie : companyMovieList.get(productionCompany)) {
-                if (movie.getRunningTime()>=low && movie.getRunningTime()<=high )movies.add(movie);
+                if (movie.getRunningTime()>=low && movie.getRunningTime()<=high )movies.addElement(movie);
             }
         }
         return movies;
     }
 
     public static int getMovieCount(String productionCompany){
-        if(!isProductionCompany(productionCompany) && companyMovieList.get(productionCompany)==null)return 0;
+        productionCompany = StringRectifier.rectify(productionCompany);
+        if(!isProductionCompany(productionCompany))return 0;
         else return companyMovieList.get(productionCompany).size();
     }
 
-    public static List<Movie> top10Movies(){
-        List<Movie>movieList = new ArrayList<>();
+    public static Vector<Movie> top10Movies(){
+        Vector<Movie>movieList = new Vector<>();
         for(String productionCompany : companyMovieList.keySet()) {
             movieList.addAll(companyMovieList.get(productionCompany));
         }
@@ -181,11 +186,12 @@ public class Movie implements Serializable {
                 }
             }
         }
-        return movieList.subList(0,9);
+        return new Vector<>(movieList.subList(0,9));
     }
 
-    public static List<Movie> getMostRecentMovies(String productionCompany){
-        List<Movie> movies=Movie.getMovieByProductionCompany(productionCompany);
+    public static Vector<Movie> getMostRecentMovies(String productionCompany){
+        productionCompany = StringRectifier.rectify(productionCompany);
+        Vector<Movie> movies=Movie.getMovieByProductionCompany(productionCompany);
         int latestYear=0;
         for (Movie movie : movies) {
             if (latestYear < movie.getReleaseYear()) latestYear = movie.getReleaseYear();
@@ -193,22 +199,24 @@ public class Movie implements Serializable {
         return Movie.getMovieByYear(latestYear);
     }
 
-    public static List<Movie> getMaxRevenue(String productionCompany){
-        List<Movie> movies = Movie.getMovieByProductionCompany(productionCompany);
-        List<Movie> maxRevenueMovies = new ArrayList<>();
+    public static Vector<Movie> getMaxRevenue(String productionCompany){
+        productionCompany = StringRectifier.rectify(productionCompany);
+        Vector<Movie> movies = Movie.getMovieByProductionCompany(productionCompany);
+        Vector<Movie> maxRevenueMovies = new Vector<>();
         long maxRevenue=0;
         for (Movie movie : movies) {
             if (maxRevenue < movie.getRevenue()) maxRevenue = movie.getRevenue();
         }
         for(Movie m:movies){
-            if(m.getRevenue()==maxRevenue)maxRevenueMovies.add(m);
+            if(m.getRevenue()==maxRevenue)maxRevenueMovies.addElement(m);
         }
         return maxRevenueMovies;
     }
 
     public static long getTotalProfit(String productionCompany){
+        productionCompany = StringRectifier.rectify(productionCompany);
         long totalProfit=0;
-        List<Movie> movies = Movie.getMovieByProductionCompany(productionCompany);
+        Vector<Movie> movies = Movie.getMovieByProductionCompany(productionCompany);
         for(Movie m:movies){
             totalProfit+=m.getProfit();
         }
@@ -219,35 +227,54 @@ public class Movie implements Serializable {
         return companyMovieList.keySet();
     }
 
-    public synchronized boolean addMovie(){
+    public boolean addMovie(){
         if(isName(name))return false;
         else{
             if(isProductionCompany(productionCompany)){
-                getMovieByProductionCompany(productionCompany).add(this);
+                getMovieByProductionCompany(productionCompany).addElement(this);
             }
             else {
-                List<Movie> movies = new ArrayList<>();
-                movies.add(this);
+                Vector<Movie> movies = new Vector<>();
+                movies.addElement(this);
                 companyMovieList.put(productionCompany,movies);
             }
             return true;
         }
     }
 
-    public synchronized void changeProductionCompany(String newProductionCompany){
-        List<Movie> oldCompanyMovies = getMovieByProductionCompany(this.productionCompany);
-        System.out.println(oldCompanyMovies.size());
-        System.out.println("Current movie name : "+this.name);
-        oldCompanyMovies.remove(this);
+    public void changeProductionCompany(String newProductionCompany){
+        //rectify name
+        newProductionCompany = StringRectifier.rectify(newProductionCompany);
+
+        //get old production company movies
+        Vector<Movie>oldCompanyMovies = getMovieByProductionCompany(this.productionCompany);
+
+        //console check that everything is ok
+        System.out.println("Size before deletion : "+oldCompanyMovies.size());
+        System.out.println("Current movie name : "+name);
+
+        //remove movie from old company list
+        oldCompanyMovies.removeElement(this);
+
+        //console check after deletion
         System.out.println("Size after deletion : "+oldCompanyMovies.size());
         oldCompanyMovies.forEach((movie)->System.out.println(movie.name));
-        this.setProductionCompany(newProductionCompany);
+
+        //setting new
+        setProductionCompany(newProductionCompany);
+
+        //console check for updated production company
         System.out.println("Changed production company : "+this.productionCompany);
-        List<Movie> newCompanyMovies = getMovieByProductionCompany(newProductionCompany);
+
+        //update vector
+        Vector<Movie> newCompanyMovies = getMovieByProductionCompany(newProductionCompany);
+
+        //console check update
         System.out.println("Old size : "+newCompanyMovies.size());
-        newCompanyMovies.add(this);
+        newCompanyMovies.addElement(this);
         System.out.println("New size : "+newCompanyMovies.size());
         newCompanyMovies.forEach((movie)->System.out.println(movie.name));
         System.out.println("Movie added successfully");
+        //exit
     }
 }
