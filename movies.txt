@@ -38,7 +38,7 @@ Chain Reaction,1996,Action,Drama,Science Fiction,107,Twentieth Century Fox Film 
 The Godfather,1972,Drama,Crime,,175,Paramount Pictures,6000000,245066411
 Vertigo,1958,Mystery,Romance,Thriller,128,Paramount Pictures,2479000,28000000
 Rear Window,1954,Drama,Mystery,Thriller,112,Paramount Pictures,1000000,36764313
-The Wizard of Oz,1939,Adventure,Family,Fantasy,102,,2777000,33754967
+The Wizard of Oz,1939,Adventure,Family,Fantasy,102,Metro-Goldwyn-Mayer,2777000,33754967
 Citizen Kane,1941,Mystery,Drama,,119,RKO Radio Pictures,839727,23217674
 2001: A Space Odyssey,1968,Science Fiction,Mystery,Adventure,149,Stanley Kubrick Productions,10500000,68700000
 It's a Wonderful Life,1946,Drama,Family,Fantasy,130,RKO Radio Pictures,3180000,9644124
