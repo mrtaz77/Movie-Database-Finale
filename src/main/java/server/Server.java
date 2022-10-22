@@ -5,6 +5,7 @@ import util.NetworkUtil;
 
 import java.io.*;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -99,6 +100,20 @@ public class Server {
 
         new FileWriteThreadServer(this);
         new InputThreadServer(this);
+
+        //Server connection
+        try{
+            serverSocket = new ServerSocket(44444);
+            System.out.println("Server is waiting...");
+            while(true){
+                Socket clientSocket = serverSocket.accept();
+                System.out.println("Server accepts a client");
+                NetworkUtil networkUtil = new NetworkUtil(clientSocket);
+                new ReadThreadServer(clientSocket,this,networkUtil);
+            }
+        }catch (IOException e){
+            System.out.println("Server starts... "+e);
+        }
     }
 
 
