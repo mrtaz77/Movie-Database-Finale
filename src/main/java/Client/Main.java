@@ -28,7 +28,7 @@ public class Main extends Application {
         return networkUtil;
     }
 
-    //override of abstract class Application
+    //overriding start of abstract class Application
     @Override
     public void start(Stage primaryStage) throws Exception {
         stage = primaryStage;
