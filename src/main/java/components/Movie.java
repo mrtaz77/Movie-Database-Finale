@@ -13,7 +13,7 @@ public class Movie implements Serializable {
     private long budget,revenue;
 
     //static members
-    private static final ConcurrentHashMap<String,Vector<Movie>> companyMovieList = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<String,Vector<Movie>> companyMovieList = new ConcurrentHashMap<>();
 
     //methods
 
@@ -55,6 +55,7 @@ public class Movie implements Serializable {
     public void setGenre1(String genre){this.genre1=genre;}
     public void setGenre2(String genre){this.genre2=genre;}
     public void setGenre3(String genre){this.genre3=genre;}
+    public static void setCompanyMovieList(ConcurrentHashMap<String,Vector<Movie>> companyMovieList){Movie.companyMovieList =companyMovieList;}
 
     //get-methods
     public String getName(){return name;}
