@@ -15,7 +15,7 @@ Star Wars,1977,Adventure,Action,Science Fiction,121,Lucasfilm,11000000,775398007
 Pulp Fiction,1994,Thriller,Crime,,154,Miramax Films,8000000,213928762
 The Shawshank Redemption,1994,Drama,Crime,,142,Castle Rock Entertainment,25000000,28341469
 While You Were Sleeping,1995,Comedy,Drama,Romance,103,Caravan Pictures,17000000,182057016
-The Client,1994,Drama,Thriller,Crime,119,Regency Enterprises,45000000,117615211
+The client,1994,Drama,Thriller,Crime,119,Regency Enterprises,45000000,117615211
 The Crow,1994,Fantasy,Action,Thriller,102,Miramax Films,15000000,94000000
 The Flintstones,1994,Fantasy,Comedy,Family,91,Universal Pictures,46000000,341631208
 Forrest Gump,1994,Comedy,Drama,Romance,142,Paramount Pictures,55000000,677945399

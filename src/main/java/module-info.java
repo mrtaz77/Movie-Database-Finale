@@ -7,4 +7,6 @@ module system.moviedatabasefinale {
     requires com.dlsc.formsfx;
     requires org.kordamp.bootstrapfx.core;
 
+    opens client to javafx.graphics,javafx.fxml;
+    opens controllers to javafx.graphics,javafx.fxml;
 }

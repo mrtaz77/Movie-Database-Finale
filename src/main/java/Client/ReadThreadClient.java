@@ -1,4 +1,4 @@
-package Client;
+package client;
 
 import DataTransferObjects.*;
 import javafx.application.Platform;
@@ -12,7 +12,7 @@ public class ReadThreadClient implements Runnable{
     public ReadThreadClient(Main main) {
         System.out.println("In ReadThreadClient");
         this.main = main;
-        thread = new Thread(this,"Client");
+        thread = new Thread(this, "client");
         thread.start();
     }
 
@@ -23,21 +23,47 @@ public class ReadThreadClient implements Runnable{
                 Object o = main.getNetworkUtil().read();
                 if(o!=null){
                     //loginDTO
-                    if(o instanceof LoginDTO){}
+                    if(o instanceof LoginDTO){
+                        var loginDTO = (LoginDTO)o;
+                        System.out.println("Getting "+loginDTO.getClass().getName()+" "+getClass().getName());
+                        System.out.println("Production company trying to login "+loginDTO.getName());
+                        System.out.println(loginDTO.isStatus());
+
+                        //the following updates javafx ui for user created threads
+                        Platform.runLater(()->{
+                            if(loginDTO.isStatus())System.out.println(loginDTO.getName()+" logged in successfully...");
+                            else main.showAlert();
+                        });
+                    }
                     //logoutDTO
-                    if(o instanceof LogoutDTO){}
+                    else if(o instanceof LogoutDTO){}
                     //productionCompanyDTO
-                    if(o instanceof ProductionCompanyDTO){}
+                    else if(o instanceof ProductionCompanyDTO){
+                        var productionCompanyDTO = (ProductionCompanyDTO)o;
+                        var productionCompany = productionCompanyDTO.getProductionCompany();
+
+                        System.out.println(productionCompany.getName()+" received");
+                        System.out.println(productionCompany);
+
+                        Platform.runLater(()->{
+                            try{
+                                main.showMenuPage(productionCompany,"Home");
+                            }catch(Exception e){
+                                System.out.println("Exception while showing MenuPage of "+productionCompany.getName());
+                                System.out.println(e);
+                            }
+                        });
+                    }
                     //addMovieDTO
-                    if(o instanceof AddMovieDTO){}
+                    else if(o instanceof AddMovieDTO){}
                     //transferMovieDTO
-                    if(o instanceof TransferMovieDTO){}
+                    else if(o instanceof TransferMovieDTO){}
                     //password change DTO
-                    if(o instanceof PasswordChangeDTO){}
+                    else if(o instanceof PasswordChangeDTO){}
                     //movie added DTO
-                    if(o instanceof MovieAddedDTO){}
+                    else if(o instanceof MovieAddedDTO){}
                     //stop DTO
-                    if(o instanceof StopDTO){}
+                    else if(o instanceof StopDTO){}
                 }
             }
         }catch(Exception e){

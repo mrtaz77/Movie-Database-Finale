@@ -1,6 +1,8 @@
-package Client;
+package client;
 
+import components.ProductionCompany;
 import javafx.application.Application;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import util.NetworkUtil;
 
@@ -49,5 +51,16 @@ public class Main extends Application {
     public static void main(String[] args) {
         System.out.println("In main of client , launching JavaFx application");
         launch(args);
+    }
+
+    public void showAlert() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Invalid Login");
+        alert.setHeaderText("Invalid Login");
+        alert.setContentText("Production Company not found.");
+        alert.showAndWait();
+    }
+
+    public void showMenuPage(ProductionCompany productionCompany, String option) {
     }
 }
